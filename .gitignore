@@ -2,5 +2,6 @@ tags
 *.exe
 *.swp
 .vscode
-
-
+.settings
+.project
+.cproject
