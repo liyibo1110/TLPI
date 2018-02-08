@@ -18,7 +18,7 @@ int main(int argc, char *argv[]){
 		S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|
 		S_IROTH|S_IWOTH);
     if(fd == -1){
-	errExit("open");
+    	errExit("open");
     }
 
     char *buf;
