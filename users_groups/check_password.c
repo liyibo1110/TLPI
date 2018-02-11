@@ -1,7 +1,8 @@
 #define _BSD_SOURCE
-#define _XOPEN_SOURCE
+#define __USE_XOPEN
 #include <stdio.h>
 #include <unistd.h>
+#include <crypt.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -20,34 +21,34 @@ int main(void){
 
     char *username = (char *)malloc(lnmax);
     if(username == NULL){
-	errExit("malloc");
+    	errExit("malloc");
     }
 
     //输入用户名值
     printf("Username: ");
     fflush(stdout);
     if(fgets(username, lnmax, stdin) == NULL){
-	exit(EXIT_FAILURE);
+    	exit(EXIT_FAILURE);
     }
 
     size_t len = strlen(username);
     //将带进来的换行符转成结束符
     if(username[len-1] == '\n'){
-	username[len-1] = '\0';
+    	username[len-1] = '\0';
     }
 
     struct passwd *pwd = getpwnam(username);
     if(pwd == NULL){
-	fatal("could't get password record");
+    	fatal("could't get password record");
     }
     struct spwd *spwd = getspnam(username);
     if(spwd == NULL || errno == EACCES){
-	fatal("no permission to read shadow password file");
+    	fatal("no permission to read shadow password file");
     }
 
     if(spwd != NULL){
-	//立刻用安全的加密密码覆盖
-	pwd->pw_passwd = spwd->sp_pwdp;
+    	//立刻用安全的加密密码覆盖
+    	pwd->pw_passwd = spwd->sp_pwdp;
     }
 
     //从输入流获取用户输入的密码
@@ -58,17 +59,17 @@ int main(void){
 
     //立刻将password指向的输入内容清理掉
     for(char *p = password; *p != '\0';){
-	*p++ = '\0';
+    	*p++ = '\0';
     }
 
     if(encrypted == NULL){
-	errExit("crypt");
+    	errExit("crypt");
     }
 
     bool authOk = strcmp(encrypted, pwd->pw_passwd) == 0;
     if(!authOk){
-	printf("Incorrent password\n");
-	exit(EXIT_FAILURE);
+    	printf("Incorrent password\n");
+    	exit(EXIT_FAILURE);
     }
 
     printf("Successfully authenticated: UID=%ld\n", (long)pwd->pw_uid);

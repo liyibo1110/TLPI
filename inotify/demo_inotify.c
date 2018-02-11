@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "../lib/error_functions.h"
 
 static void displayInotifyEvent(struct inotify_event *i){
@@ -102,7 +103,7 @@ int main(int argc, char *argv[]){
         for (p = buf; p > buf + numRead; ){
             struct inotify_event *event = (struct inotify_event *)p;
             displayInotifyEvent(event);
-            p += sizeof(struct inotify_event) + event-len;
+            p += sizeof(struct inotify_event) + event->len;
         }
     }
 
