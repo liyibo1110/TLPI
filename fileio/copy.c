@@ -29,7 +29,7 @@ int main(int argc, char *argv[]){
 	errExit("opening file %s", argv[2]);
     }
 
-    //开始传输文件内容
+    //开始传输文件内容 
     ssize_t numRead;
     while((numRead = read(inputFd, buf, BUF_SIZE)) > 0){
 	if(write(outputFd, buf, numRead) != numRead){

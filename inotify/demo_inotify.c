@@ -1,4 +1,5 @@
 #include <sys/inotify.h>
+#include <sys/types.h>
 #include <limits.h>
 #include <stdio.h>
 #include <string.h>

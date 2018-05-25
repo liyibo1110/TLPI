@@ -5,6 +5,8 @@
 #include <limits.h>
 #include <errno.h>
 
+extern errno;
+
 static void gnFail(const char *fname, const char *msg,
 		const char *arg, const char *name){
     fprintf(stderr, "%s error", fname);

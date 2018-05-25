@@ -1,11 +1,13 @@
 #include <dirent.h>
+#include <errno.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
-#include <errno.h>
 #include <string.h>
 #include <stdbool.h>
 #include "../lib/error_functions.h"
+
+extern errno;
 
 static void listFiles(const char *dirpath){
     bool isCurrent = strcmp(dirpath, ".") == 0;

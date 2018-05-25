@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+
 static void terminate(bool useExit3){
     char *s;
     s = getenv("EF_DUMPCODE");
