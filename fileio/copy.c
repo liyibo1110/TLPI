@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <stdio.h>
 #include <fcntl.h>
 #define BUF_SIZE 1024
 
@@ -13,7 +14,6 @@ int main(int argc, char *argv[]){
     if(argc != 3 || strcmp(argv[1], "--help") == 0){
         usageErr("%s old-file new-file\n", argv[0]);
     }
-
     int inputFd = open(argv[1], O_RDONLY);
     if(inputFd == -1){
 	errExit("opening file %s", argv[1]);
