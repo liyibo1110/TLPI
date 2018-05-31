@@ -1,5 +1,6 @@
 tags
 *.exe
+*.out
 *.swp
 .vscode
 .settings
