@@ -1,8 +1,9 @@
 #define _GUN_SOURCE
 #include <stdio.h>
+#include <sys/types.h>
 #include <string.h>
 #include <signal.h>
-#include "./error_functions.h"
+#include "./signal_functions.h"
 
 void printSigset(FILE *of, const char *prefix, const sigset_t *sigset){
 

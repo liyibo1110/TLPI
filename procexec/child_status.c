@@ -1,6 +1,7 @@
 #include "../lib/error_functions.h"
 #include "../lib/get_num.h"
 #include "./print_wait_status.h"
+#include <sys/types.h>
 #include <signal.h>
 #include <stdlib.h>
 #include <stdio.h>
