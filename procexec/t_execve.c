@@ -10,10 +10,10 @@ int main(int argc, char *argv[]){
     if(argc != 2 || strcmp(argv[1], "--help") == 0){
         usageErr("%s pathname\n", argv[0]);
     }
-
+    
     //定义3个元素的全局环境变量
     char *envVec[] = {"GREET=salut", "BYE=adieu", NULL};
-
+    
     char *argVec[10];   //定义足够大的参数列表
     //获取传入的文件名
     argVec[0] = strrchr(argv[1], '/');
