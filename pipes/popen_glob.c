@@ -18,7 +18,7 @@ int main(int argc, char *argv[]){
     char popenCmd[PCMD_BUF_SIZE];
     bool badPattern;
     char pathname[PATH_MAX];
-    int i, len;
+    int i, len, fileCnt, status;
     FILE *fp;
     while(true){
         printf("pattern: ");
@@ -33,7 +33,7 @@ int main(int argc, char *argv[]){
     
         //逐个对字符做检查，所有字母和数字以及给定的一些特殊符号可以通过，其他的不行，比如空格
         for(i = 0, badPattern = false; i < len && !badPattern; i++){
-            if(isalnum((unsigned char)pat[i]) && strchr("_*?[^-].", pat[i]) == NULL){
+            if(!isalnum((unsigned char)pat[i]) && strchr("_*?[^-].", pat[i]) == NULL){
                 badPattern = true;
             }
         }
@@ -46,6 +46,24 @@ int main(int argc, char *argv[]){
         //构建要执行的命令
         snprintf(popenCmd, PCMD_BUF_SIZE, POPEN_FMT, pat);
         popenCmd[PCMD_BUF_SIZE - 1] = '\0';
+
+        fp = popen(popenCmd, "r");
+        if(fp == NULL){
+            printf("popen() failed\n");
+            continue;
+        }
+
+        //开始统计结果
+        fileCnt = 0;
+        while(fgets(pathname, PATH_MAX, fp) != NULL){
+            printf("%s", pathname);
+            fileCnt++;
+        }
+
+        status = pclose(fp);
+        printf("    %d matching file%s\n", fileCnt, (fileCnt != 1) ? "s" : "");
+        printf("    pclose() status == %#x\n", (unsigned int)status);
+        if(status != -1)    printWaitStatus("\t", status);
     }
-    
+    exit(EXIT_SUCCESS);
 }
