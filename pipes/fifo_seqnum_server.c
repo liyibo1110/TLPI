@@ -12,6 +12,7 @@
 extern int errno;
 
 int main(int argc, char *argv[]){
+    char  clientFifo[CLIENT_FIFO_NAME_LEN];
     struct request req;
     struct response res;
     int seqNum = 0; //初始化要返回的序列值
@@ -38,5 +39,20 @@ int main(int argc, char *argv[]){
         }
 
         //开启相应client的FIFO
+        snprinf(clientFifo, CLIENT_FIFO_NAME_LEN, CLIENT_FIFO_TEMPLATE, (long)req.pid); //fifo文件名
+        int clientFd = open(clientFifo, O_WRONLY);
+        if(clientFd == -1){
+            errMsg("open %s", clientFifo);
+            continue;
+        }
+
+        //发送response
+        res.seqNum = seqNum;
+        if(write(clientFd, &res, sizeof(struct response)) != sizeof(struct response)){
+            fprintf(stderr, "Error writing to FIFO %s\n", clientFifo);
+        }
+        if(close(clientFd) == -1)   errMsg("close");
+        seqNum = seqNum + req.seqLen;   //增加request中传递的len
+
     }
 }
