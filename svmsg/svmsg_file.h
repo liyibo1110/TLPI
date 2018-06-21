@@ -8,8 +8,8 @@ struct requestMsg{
     char pathname[PATH_MAX];
 };
 
-//利用offsetof宏动态计算clientId和pathname这2个字段的总字节数，因为存在空间填充问题，所以并不能简单相加
-#define REQ_MSG_SIZE (offsetof(struct requestMsg, pathname) - offsetof(struct requestMsg, clientId) + PATH_MAX);
+//利用offsetof宏动态计算clientId和pathname这2个字段的总字节数，因为存在字节填充问题，所以并不能简单相加
+#define REQ_MSG_SIZE (offsetof(struct requestMsg, pathname) - offsetof(struct requestMsg, clientId) + PATH_MAX)
 #define RES_MSG_SIZE 8192
 
 struct responseMsg{
