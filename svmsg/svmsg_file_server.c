@@ -25,6 +25,9 @@ static void grimReaper(int sig){
 }
 
 static void serveRequest(const struct requestMsg *req){
+
+    printf("serve...\n");
+
     struct responseMsg res;
     //尝试打开客户端指定的文件
     int fd = open(req->pathname, O_RDONLY);
@@ -35,22 +38,25 @@ static void serveRequest(const struct requestMsg *req){
         exit(EXIT_FAILURE);
     }
 
+    res.mtype = RES_MT_DATA;
     ssize_t numRead;
     while((numRead = read(fd, res.data, RES_MSG_SIZE)) > 0){
         if(msgsnd(req->clientId, &res, numRead, 0) == -1){
             break;
         }
+        printf("send over...\n");
     }
     //最后发送结束type
     res.mtype = RES_MT_END;
     msgsnd(req->clientId, &res, 0, 0);
+    printf("send end...\n");
 }
 
 int main(int argc, char *argv[]){
     struct requestMsg req;
     struct sigaction sa;
     int serverId = msgget(SERVER_KEY, IPC_CREAT | IPC_EXCL | S_IRUSR | S_IWUSR | S_IWGRP);
-    if(serverId == -1)  errEixt("msgget");
+    if(serverId == -1)  errExit("msgget");
 
     //建立SIGCHLD信号处理器
     sigemptyset(&sa.sa_mask);
@@ -61,7 +67,9 @@ int main(int argc, char *argv[]){
     pid_t pid;
     ssize_t msgLen;
     while(true){
+        printf("starting...\n");
         msgLen = msgrcv(serverId, &req, REQ_MSG_SIZE, 0, 0);
+        printf("received req: %ld\n", (long)msgLen);
         if(msgLen == -1){
             //如果返回-1,可能是被SIGCHLD信号中断，这属于正常现象
             if(errno == EINTR){
