@@ -30,7 +30,7 @@ int main(int argc, char *argv[]){
     //显示每个信号量
     arg.array = calloc(ds.sem_nsems, sizeof(arg.array[0]));   //array需要动态分配，因为不知道ds里面会有多少个信号
     if(arg.array == NULL)   errExit("calloc");
-    if(semctl(semid, 0, GETALL, arg) == -1) errExit(semctl - GETALL);
+    if(semctl(semid, 0, GETALL, arg) == -1) errExit("semctl - GETALL");
 
     printf("Sem #   Value   SEMPID  SEMNCNT SEMZCNT\n");
     for(int i = 0; i < ds.sem_nsems; i++){
