@@ -6,11 +6,11 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <sys/sem.h>
+#include <sys/shm.h>
 
 static void usageError(const char *progName, const char *msg){
     if(msg != NULL) fprintf(stderr, "%s", msg);
-    fprintf(stderr, "Usage: %s [-cx] {-f pathname | -k key | -p} num-sems [octal-perms]\n", progName);
+    fprintf(stderr, "Usage: %s [-cx] {-f pathname | -k key | -p} seg-size [octal-perms]\n", progName);
     fprintf(stderr, "   -c              Use IPC_CREAT flag\n");
     fprintf(stderr, "   -x              Use IPC_EXCL flag\n");
     fprintf(stderr, "   -f pathname     Generate key using ftok()\n");
@@ -62,12 +62,12 @@ int main(int argc, char *argv[]){
 
     //printf("optind=%d, argc=%d", optind, argc);
 
-    int numSems = getInt(argv[optind], 0, "num-sems");
+    int segSize = getLong(argv[optind], 0, "seg-size");
 
     //参数最后还可以追加权限
     unsigned int perms = (argc <= optind + 1) ? (S_IRUSR | S_IWUSR) : getInt(argv[optind + 1], GN_BASE_8, "octal-perms");
-    int semid = semget(key, numSems, flags | perms);
-    if(semid == -1) errExit("semget");
-    printf("%d\n", semid);
+    int shmid = shmget(key, segSize, flags | perms);
+    if(shmid == -1) errExit("shmget");
+    printf("%d\n", shmid);
     exit(EXIT_SUCCESS);
 }
