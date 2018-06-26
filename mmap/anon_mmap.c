@@ -27,7 +27,7 @@ int main(int argc, char *argv[]){
         printf("found USE_MAP_ANON flag!\n");
         int fd = open("/dev/zero", O_RDWR);
         if(fd == -1)    errExit("open");
-        addr = mmap(NULL,sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+        addr = mmap(NULL, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
         if(addr == MAP_FAILED)  errExit("mmap");
         if(close(fd) == -1) errExit("close");
     #endif 
