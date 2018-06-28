@@ -47,7 +47,7 @@ int main(int argc, char *argv[]){
     struct sigaction sa;
     
     if(argc > 1 && strcmp(argv[1], "help") == 0){  
-        usageErr("%S [secs [usecs [int-secs [int-usecs]]]]\n", argv[0]);
+        usageErr("%s [secs [usecs [int-secs [int-usecs]]]]\n", argv[0]);
     }
 
     //初始化信号处理器
