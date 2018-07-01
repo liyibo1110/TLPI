@@ -11,7 +11,7 @@ void printSigset(FILE *of, const char *prefix, const sigset_t *sigset){
 	for(int sig = 1; sig < NSIG; sig++){
 		if(sigismember(sigset, sig)){
 			count++;
-			fprint(of, "%s%d (%s)\n", prefix, sig, strsignal(sig));
+			fprintf(of, "%s%d (%s)\n", prefix, sig, strsignal(sig));
 		}
 	}
 	if(count == 0){
@@ -29,7 +29,7 @@ int printSigMask(FILE *of, const char *msg){
 	}
 
 	sigset_t currMask;
-	if(sigpromask(SIG_BLOCK, NULL, &currMask) == -1){
+	if(sigprocmask(SIG_BLOCK, NULL, &currMask) == -1){
 		return -1;
 	}
 
@@ -47,7 +47,7 @@ int printPendingSigs(FILE *of, const char *msg){
 	}
 
 	sigset_t pendingSigs;
-	if(sigpending(SIG_BLOCK, NULL, &pendingSigs) == -1){
+	if(sigpending(&pendingSigs) == -1){
 		return -1;
 	}
 
