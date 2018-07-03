@@ -71,7 +71,7 @@ void err_exit(const char *format, ...){
     terminate(false);
 }
 
-void errExitEn(int errnum, const char *format, ...){
+void errExitEN(int errnum, const char *format, ...){
     va_list argList;
     va_start(argList, format);
     outputError(true, errnum, true, format, argList);

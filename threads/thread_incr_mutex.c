@@ -15,13 +15,13 @@ static void *threadFunc(void *arg){
     for(int i = 0; i < loops; i++){
         //先锁定
         s = pthread_mutex_lock(&mtx);
-        if(s != 0)  errExitEn(s, "pthread_mutex_lock");
+        if(s != 0)  errExitEN(s, "pthread_mutex_lock");
         //先赋值，再自增，再赋值，不是原子操作
         loc = glob;
         loc++;
         glob = loc;
         s = pthread_mutex_unlock(&mtx);
-        if(s != 0)  errExitEn(s, "pthread_mutex_unlock");
+        if(s != 0)  errExitEN(s, "pthread_mutex_unlock");
     }
     return NULL;
 }
@@ -32,14 +32,14 @@ int main(int argc, char *argv[]){
     int loops = (argc > 1) ? atoi(argv[1]) : 10000000;
     int s = pthread_create(&t1, NULL, threadFunc, &loops);
     //注意线程API中不是-1才表示出错了，只要不是0,都是错
-    if(s != 0)  errExitEn(s, "pthread_create");
+    if(s != 0)  errExitEN(s, "pthread_create");
     s = pthread_create(&t2, NULL, threadFunc, &loops);
-    if(s != 0)  errExitEn(s, "pthread_create");
+    if(s != 0)  errExitEN(s, "pthread_create");
 
     s = pthread_join(t1, NULL); 
-    if(s != 0)  errExitEn(s, "pthread_join");
+    if(s != 0)  errExitEN(s, "pthread_join");
     s = pthread_join(t2, NULL); 
-    if(s != 0)  errExitEn(s, "pthread_join");
+    if(s != 0)  errExitEN(s, "pthread_join");
     printf("glob = %d\n", glob);
     exit(EXIT_SUCCESS);
 
