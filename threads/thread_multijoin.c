@@ -31,9 +31,12 @@ static void *threadFunc(void *arg){
     
     //参数传过来的是创建线程的数组下标
     int index = (int) arg;
+    int s;
+    
     sleep(thread[index].sleepTime);
     printf("Thread %d terminating\n", index);
-    int s = pthread_mutex_lock(&threadMutex);
+    
+    s = pthread_mutex_lock(&threadMutex);
     if(s != 0)  errExitEN(s, "pthread_mutex_lock");
 
     //开始操作共享资源
@@ -51,6 +54,8 @@ static void *threadFunc(void *arg){
 
 int main(int argc, char *argv[]){
 
+    int s;
+
 	if(argc < 2 || strcmp(argv[1], "--help") == 0){
         usageErr("%s num-secs...\n", argv[0]);
     }
@@ -59,8 +64,7 @@ int main(int argc, char *argv[]){
     if(thread == NULL)  errExit("calloc");
 
     //开始创建线程
-    int s, index;
-    for(index = 0; index < argc - 1; index++){
+    for(int index = 0; index < argc - 1; index++){
         thread[index].sleepTime = atoi(argv[index + 1]);
         thread[index].state = TS_ALIVE;
         s = pthread_create(&thread[index].tid, NULL, threadFunc, (void *) index);   //index必须要传地址
@@ -82,15 +86,14 @@ int main(int argc, char *argv[]){
         }
 
         //每次轮询所有线程
-        int index2;
-        for(index2 = 0; index2 < totalThreads; index2++){
-            if(thread[index2].state == TS_TERMINATED){
-                s = pthread_join(thread[index2].tid, NULL);
+        for(int index = 0; index < totalThreads; index++){
+            if(thread[index].state == TS_TERMINATED){
+                s = pthread_join(thread[index].tid, NULL);
                 if(s != 0)  errExitEN(s, "pthread_join");
-                thread[index2].state == TS_JOINED;
+                thread[index].state = TS_JOINED;
                 numLive--;
                 numUnjoined--;
-                printf("Reaped thread %d (numLive=%d)\n", index2, numLive);
+                printf("Reaped thread %d (numLive=%d)\n", index, numLive);
             }
         }
 
