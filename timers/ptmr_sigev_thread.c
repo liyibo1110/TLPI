@@ -60,11 +60,11 @@ int main(int argc, char *argv[]){
         if(timer_settime(tidlist[i], 0, &ts, NULL) == -1)   errExit("timer_settime");
     }
 
-    int s = pthread_mutex_lock(&mtx);
+    int s = pthread_mutex_lock(&mtx);   //立刻先锁定，不让线程在调用wait之前操作
     if(s != 0)  errExitEN(s, "pthread_mutex_lock");
     
     while(true){
-        s = pthread_cond_wait(&cond, &mtx);
+        s = pthread_cond_wait(&cond, &mtx); //这一步会自动unlock
         if(s != 0)  errExitEN(s, "pthread_cond_wait");
         printf("main(): expireCount = %d\n", expireCount);
     }
