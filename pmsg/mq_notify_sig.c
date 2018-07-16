@@ -55,8 +55,9 @@ int main(int argc, char *argv[]){
     while(true){
         //在这里挂起并等待通知信号
         sigsuspend(&emptyMask);
-        //到这里说明之前收到了通知，需要再次注册
+        //到这里说明之前收到了通知，需要再次立即先注册，然后紧跟数据处理
         if(mq_notify(mqd, &sev) == -1)  errExit("mq_notify");
+        //因为打开了非阻塞开关，因此receive调用会立即返回，如果无数据，则返回EAGAIN错误
         while((numRead = mq_receive(mqd, buffer, attr.mq_msgsize, NULL)) >= 0){
             printf("Read %ld bytes\n", (long)numRead);
         }
