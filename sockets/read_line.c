@@ -1,5 +1,6 @@
 #include "./read_line.h"
 #include <unistd.h>
+#include <stdio.h>
 #include <errno.h>
 #include <stdbool.h>
 ssize_t readLine(int fd, void *buffer, size_t n){
