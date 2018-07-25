@@ -16,7 +16,9 @@ ssize_t readLine(int fd, void *buffer, size_t n){
     ssize_t numRead;
     while(true){
         //每次只读1个字符
+        //printf("readLine start...\n");
         numRead = read(fd, &ch, 1);
+        //printf("readLine over, char is %c\n", ch);
         if(numRead == -1){
             if(errno == EINTR){
                 continue;   //被中断不算

@@ -25,6 +25,7 @@ int main(int argc, char *argv[]){
         usageErr("%s [init-seq-num]\n", argv[0]);
     }
 
+    //服务端维护的当前序列值
     uint32_t seqNum = (argc > 1) ? atoi(argv[1]) : 1;
     //服务端必须忽略PIPE信号，以至于不受因客户端关闭而造成的反伤
     if(signal(SIGPIPE, SIG_IGN) == SIG_ERR) errExit("signal");
@@ -60,7 +61,6 @@ int main(int argc, char *argv[]){
     //result没用了，需要释放
     freeaddrinfo(result);
 
-    uint32_t seqNum;    //服务端维护的当前序列值
     socklen_t addrlen; 
     int cfd;
     struct sockaddr_storage claddr; //兼容各种形式的客户端地址信息
@@ -75,7 +75,7 @@ int main(int argc, char *argv[]){
         cfd = accept(lfd, (struct sockaddr *)&claddr, &addrlen);
         if(cfd == -1){
             //继续监听
-            errMsg(accept);
+            errMsg("accept");
             continue;
         }
         //获取客户端的可读地址，注意addrlen已经变成accept更改过的长度了
@@ -93,6 +93,8 @@ int main(int argc, char *argv[]){
             continue;
         }
 
+        printf("server readLine over...\n");
+
         reqLen = atoi(reqLenStr);
         //传来负数直接不管
         if(reqLen <= 0){
@@ -101,10 +103,12 @@ int main(int argc, char *argv[]){
         }
 
         snprintf(seqNumStr, INT_LEN, "%d\n", seqNum);
-        //输出响应
+        //输出响应，注意也是要转成字符串
+        printf("server ready to send");
         if(write(cfd, &seqNumStr, strlen(seqNumStr)) != strlen(seqNumStr)){
             fprintf(stderr, "Error on write");
         }
+        printf("server send over...");
         //生成新的序列
         seqNum += reqLen;
         if(close(cfd) == -1)    errMsg("close");
