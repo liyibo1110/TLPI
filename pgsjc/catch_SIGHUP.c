@@ -22,7 +22,7 @@ int main(int argc, char *argv[]){
     pid_t childPid = fork();
 
     if(childPid == -1)  errExit("fork");
-    if(childPid == 0 && argc > 1){
+    if(childPid == 0 && argc > 1){  //如果随便带个参数，子进程将被移到新的进程组执行
         if(setpgid(0, 0) == -1) errExit("setpgid");
     }
 
