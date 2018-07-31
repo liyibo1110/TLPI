@@ -1,4 +1,5 @@
 #include "become_daemon.h"
+#include "../lib/error_functions.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -48,7 +49,7 @@ static void logOpen(const char *logFilename){
 }
 
 static void logClose(void){
-    logMessage(logfp, "Closing log file");
+    logMessage("Closing log file");
     fclose(logfp);
 }
 
@@ -81,7 +82,7 @@ int main(int argc, char *argv[]){
     sa.sa_flags = SA_RESTART;
     sa.sa_handler = sighupHandler;
     if(sigaction(SIGHUP, &sa, NULL) == -1)  errExit("sigaction");
-
+    
     if(becomeDaemon(0) == -1)   errExit("becomeDaemon");
 
     logOpen(LOG_FILE);
