@@ -110,6 +110,7 @@ int main(int argc, char *argv[]){
             break;
         }
         if(n == 0)  break;  //终端断开才会返回0
+        
         if(isalpha((unsigned char)ch)){ //字母转成小写再输出
             putchar(tolower((unsigned char)ch));
         }else if(ch == '\n' || ch == '\r'){ //换行符则直接输出
@@ -119,9 +120,9 @@ int main(int argc, char *argv[]){
         }else{
             putchar('*');
         }
-        if(ch == 'q')   break;
-        //最终要恢复终端配置
-        if(tcsetattr(STDIN_FILENO, TCSAFLUSH, &userTermios) == -1)  errExit("tcsetattr");
-        exit(EXIT_SUCCESS);
+        if(ch == 'q')   break;    
     }
+    //最终要恢复终端配置
+    if(tcsetattr(STDIN_FILENO, TCSAFLUSH, &userTermios) == -1)  errExit("tcsetattr");
+    exit(EXIT_SUCCESS);
 }
